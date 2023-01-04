@@ -1,0 +1,10 @@
+npx prisma migrate dev --name init
+
+https://docs.nestjs.com/cli/usages
+
+
+이메일 smtp 설정하는법: https://velog.io/@jiwon/-Nodemailer%EB%A1%9C-%EC%9D%B8%EC%A6%9D-%EA%B4%80%EB%A0%A8-%EC%9D%B4%EB%A9%94%EC%9D%BC-%EB%B3%B4%EB%82%B4%EA%B8%B0-d4k4pqoot4
+
+jwt encoding한거랑 body로 받은 email 비교해서 에러핸들링
+
+해야할 일 : email컬럼을 => userId 변경, userId 컬럼추가
