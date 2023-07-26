@@ -7,6 +7,13 @@ export class loginDto {
   route?: string;
 }
 
+export class upsertDto {
+  userId: string;
+  password: string;
+  nickname: string;
+  email: string;
+}
+
 export class authDto extends loginDto {
   nickname: string;
 }

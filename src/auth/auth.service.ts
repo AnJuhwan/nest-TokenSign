@@ -2,7 +2,7 @@ import { PrismaService } from './../common/prisma/prisma.service';
 import { Injectable, HttpException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
-import { authDto, loginDto } from './dto/auth.dto';
+import { authDto, loginDto, upsertDto } from './dto/auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { User } from '@prisma/client';
@@ -21,6 +21,54 @@ export class AuthService {
     private jwtService: JwtService,
     private userService: UsersService,
   ) {}
+
+  async upsertAuth(body: upsertDto) {
+    const { userId, password, nickname, email } = body;
+
+    // const isUser = await this.userService.findNickname(nickname);
+
+    // if (isUser) {
+    //   return await this.userService.nicknameChange(userId, nickname);
+    // }
+
+    // return await this.signup({
+    //   userId,
+    //   nickname,
+    //   email,
+    //   password,
+    // });
+
+    // const user = this.prismaService.user.upsert({
+    //   where: { userId },
+    //   create: {
+    //     userId,
+    //     email,
+    //     nickname,
+    //     password,
+    //   },
+    //   update: {
+    //     nickname,
+    //   },
+    // });
+
+    // return user;
+
+    try {
+      await this.prismaService.$queryRaw<upsertDto>`
+        INSERT INTO User (userId, nickname, password, email)
+        values (${userId}, ${nickname}, ${password} , ${email})
+        ON DUPLICATE KEY UPDATE
+        nickname = ${nickname}
+      `;
+
+      return {
+        success: true,
+      };
+    } catch (error: any) {
+      console.log(error);
+      throw new HttpException('저장에 실패하였습니다.', 400);
+    }
+  }
 
   async signup(authDto: authDto): Promise<HttpException | User> {
     const { userId, email, password, nickname, route } = authDto;

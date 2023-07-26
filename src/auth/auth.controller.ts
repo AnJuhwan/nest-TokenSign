@@ -1,7 +1,15 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
-import { authDto, loginDto } from './dto/auth.dto';
+import { authDto, loginDto, upsertDto } from './dto/auth.dto';
 import { JwtAuthGuard } from './guard/jwt.guard';
 import { LocalAuthGuard } from './guard/local-auth.guard';
 import { RefreshAuthGuard } from './guard/refresh-jwt.guard';
@@ -29,6 +37,11 @@ export class AuthController {
   async getAccessToken(@Req() req) {
     const { userId, id, email } = req.user;
     return await this.authService.getAccessToken({ userId, id, email });
+  }
+
+  @Patch('upsert')
+  async upsertAuth(@Body() body: upsertDto) {
+    return await this.authService.upsertAuth(body);
   }
 
   @UseGuards(JwtAuthGuard)
